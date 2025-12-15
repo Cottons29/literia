@@ -28,5 +28,17 @@ public class TestController {
         return "index";
     }
 
+    @GetMapping("/home")
+    public Object home() {
+        return "home";
+    }
+
+    @GetMapping("/tasks")
+    public Object task() {
+        return "tasks";
+    }
+
+
+
 
 }

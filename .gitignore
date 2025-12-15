@@ -4,3 +4,8 @@
 # Ignore Gradle build output directory
 build
 app/src/main/resources/application.properties
+
+# Node / TypeScript
+node_modules
+web_scripts/node_modules
+*.tsbuildinfo

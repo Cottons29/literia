@@ -1,0 +1,15 @@
+{
+  "workspaces": ["web_scripts"],
+  "private": true,
+  "name": "literia_scripts",
+  "version": "26.0.1",
+  "scripts": {
+    "build": "npm --workspace web_scripts run build",
+    "clean": "npm --workspace web_scripts run clean",
+    "watch": "npm --workspace web_scripts run watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "rimraf": "^6.0.1"
+  }
+}
