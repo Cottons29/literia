@@ -1,9 +1,9 @@
-package live.cottons.sigup;
+package live.cottons.app.controllers;
 
-import jakarta.validation.Valid;
+import live.cottons.models.SignUpFrom;
+import live.cottons.models.SignUpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 // import live.cottons.liter.sigup.SignUpFrom;
 
@@ -19,10 +19,10 @@ public class SigUpController {
 
     @PostMapping("/signup")
 public String signup(@ModelAttribute SignUpRequest form) {
-
-    System.out.println(form.getName());
-    System.out.println(form.getEmail());
-    System.out.println(form.getPassword());
+//
+//    System.out.println(form.getName());
+//    System.out.println(form.getEmail());
+//    System.out.println(form.getPassword());
 
     return "redirect:/login";
 }
