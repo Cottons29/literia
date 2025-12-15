@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Asset Files</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --primary: #6c63ff;
+          --primary-light: #e9e8ff;
+          --primary-dark: #5a52e8;
+          --success: #22c55e;
+          --danger: #ef4444;
+          --warning: #f59e0b;
+          --text: #1f2937;
+          --muted: #6b7280;
+          --border: #e5e7eb;
+          --bg: #f9fafb;
+          --card: #ffffff;
+          --radius: 14px;
+          --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          --shadow-lg: 0 4px 20px rgba(108, 99, 255, 0.15);
+        }
+
+        * {
+          box-sizing: border-box;
+          transition: all 0.2s ease;
+        }
+
+        body {
+          margin: 0;
+          font-family: 'Inter', sans-serif;
+          background: linear-gradient(135deg, var(--bg) 0%, #f3f4f6 100%);
+          color: var(--text);
+          min-height: 100vh;
+        }
+
+        .page {
+          max-width: 960px;
+          margin: 40px auto;
+          padding: 0 20px;
+        }
+
+        .header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 32px;
+          padding-bottom: 16px;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .header-left {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .back {
+          color: var(--primary);
+          font-size: 14px;
+          text-decoration: none;
+          width: fit-content;
+          font-weight: 500;
+          padding: 4px 0;
+        }
+
+        .back:hover {
+          color: var(--primary-dark);
+        }
+
+        h1 {
+          font-size: 28px;
+          margin: 0;
+          font-weight: 600;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .subtitle {
+          color: var(--muted);
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        .header-actions {
+          display: flex;
+          gap: 8px;
+        }
+
+        .icon-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+          border: 1px solid var(--border);
+          background: var(--card);
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+          color: var(--muted);
+          font-size: 16px;
+          box-shadow: var(--shadow);
+        }
+
+        .icon-btn:hover {
+          background: var(--primary-light);
+          border-color: var(--primary);
+          color: var(--primary);
+          box-shadow: var(--shadow-lg);
+        }
+
+        .upload-box {
+          border: 2px dashed var(--primary);
+          border-radius: var(--radius);
+          padding: 48px 36px;
+          background: linear-gradient(135deg, var(--primary-light) 0%, rgba(233, 232, 255, 0.7) 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 32px;
+          cursor: pointer;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .upload-box::before,
+        .upload-box:hover::before,
+        .upload-box:hover {
+          content: none !important;
+          border-color: var(--primary);
+          transform: none;
+          box-shadow: none;
+        }
+
+        .upload-left {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .upload-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
+          background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+          color: white;
+          display: grid;
+          place-items: center;
+          font-weight: 600;
+          font-size: 24px;
+          box-shadow: 0 8px 24px rgba(108, 99, 255, 0.3);
+        }
+
+        .upload-text {
+          font-size: 15px;
+          line-height: 1.4;
+        }
+
+        .upload-text strong {
+          color: var(--primary);
+          cursor: pointer;
+          font-weight: 600;
+        }
+
+        .upload-hint {
+          font-size: 13px;
+          color: var(--muted);
+          margin-top: 6px;
+        }
+
+        .upload-right {
+          font-weight: 600;
+          color: var(--primary);
+          background: var(--card);
+          padding: 8px 16px;
+          border-radius: 8px;
+          border: 1px solid var(--primary);
+          font-size: 14px;
+        }
+
+        .file-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .file {
+          background: var(--card);
+          border-radius: var(--radius);
+          padding: 20px;
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow);
+          position: relative;
+        }
+
+        .file:hover {
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .file-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 12px;
+        }
+
+        .file-name {
+          font-size: 15px;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .file-action {
+          color: var(--muted);
+          cursor: pointer;
+          font-size: 14px;
+          padding: 4px 8px;
+          border-radius: 6px;
+        }
+
+        .file-action:hover {
+          background: var(--bg);
+          color: var(--danger);
+        }
+
+        .progress {
+          width: 100%;
+          height: 16px;
+          background: #f1f5f9;
+          border-radius: 999px;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .bar {
+          height: 100%;
+          border-radius: 999px;
+          position: relative;
+          width: 100%;
+          background: limegreen;
+        }
+
+        .bar::after {
+          display: none !important;
+        }
+
+        .file-bottom {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 12px;
+          font-size: 13px;
+          color: var(--muted);
+        }
+
+        .status-success {
+          color: var(--success);
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .status-success::before {
+          content: '✓';
+          color: var(--success);
+        }
+
+        .status-danger {
+          color: var(--danger);
+          font-weight: 500;
+        }
+
+        .try-again {
+          color: var(--primary);
+          cursor: pointer;
+          font-weight: 500;
+          padding: 2px 6px;
+          border-radius: 4px;
+        }
+
+        .try-again:hover {
+          background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="header">
+        <div class="header-left">
+            <a class="back" href="#">← Back to Files</a>
+            <h1>Upload Asset Files</h1>
+            <div class="subtitle">Here you can manage your files & assets and other attachments.</div>
+        </div>
+        <div class="header-actions">
+            <button class="icon-btn">?</button>
+            <button class="icon-btn">⚙</button>
+            <button class="icon-btn">☰</button>
+        </div>
+    </div>
+
+    <div class="upload-box" id="uploadBox">
+        <div class="upload-left">
+            <div class="upload-icon">⬆</div>
+            <div class="upload-text">
+                <div><strong>Click here</strong> to upload your file or drag.</div>
+                <div class="upload-hint">Supported Format: SVG, JPG, PNG (10mb each)</div>
+            </div>
+        </div>
+        <input type="file" id="fileInput" style="display:none" multiple>
+    </div>
+
+    <div class="file-list" id="fileList">
+    </div>
+</div>
+<script>
+  const uploadBox = document.getElementById('uploadBox');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('fileList');
+
+  uploadBox.addEventListener('click', () => fileInput.click());
+
+  uploadBox.addEventListener('dragover', e => {
+    e.preventDefault();
+    uploadBox.style.borderColor = '#22c55e';
+    uploadBox.style.background = '#f0fdf4';
+  });
+  uploadBox.addEventListener('dragleave', e => {
+    e.preventDefault();
+    uploadBox.style.borderColor = '';
+    uploadBox.style.background = '';
+  });
+  uploadBox.addEventListener('drop', e => {
+    e.preventDefault();
+    uploadBox.style.borderColor = '';
+    uploadBox.style.background = '';
+    displayFiles(e.dataTransfer.files);
+  });
+
+  fileInput.addEventListener('change', e => {
+    displayFiles(e.target.files);
+  });
+
+  function displayFiles(files) {
+    for (const file of files) {
+      const fileDiv = document.createElement('div');
+      fileDiv.className = 'file';
+      fileDiv.innerHTML = `
+        <div class="file-top">
+          <div class="file-name">${file.name}</div>
+        </div>
+        <div class="progress">
+          <div class="bar" style="width:100%"></div>
+        </div>
+        <div class="file-bottom">
+          <span class="status-success">Ready</span>
+          <span>${Math.round(file.size/1024)} KB</span>
+        </div>
+      `;
+      fileList.appendChild(fileDiv);
+    }
+  }
+
+  document.querySelectorAll('.icon-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      alert('There is nothing. What are you expecting?');
+    });
+  });
+
+</script>
+</body>
+</html>

@@ -18,6 +18,8 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:${mysqlConnector}")
     implementation("org.flywaydb:flyway-core:${flywayVersion}")
     implementation("org.flywaydb:flyway-mysql:${flywayVersion}")
+    implementation("org.springframework.boot:spring-boot-starter:${springBootVersion}")
+    implementation("jakarta.validation:jakarta.validation-api:${springBootVersion}-M1")
 }
 
 test {
