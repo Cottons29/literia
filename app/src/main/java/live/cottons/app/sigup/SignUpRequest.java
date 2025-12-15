@@ -1,0 +1,69 @@
+package live.cottons.liter.sigup;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+
+public class SignUpRequest {
+    
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    private String name;
+    
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
+    
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).*$", 
+             message = "Password must contain letters, numbers, and symbols")
+    private String password;
+    
+    private boolean agreeToTerms;
+    
+    // Constructors
+    public SignUpRequest() {
+    }
+    
+    public SignUpRequest(String name, String email, String password, boolean agreeToTerms) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.agreeToTerms = agreeToTerms;
+    }
+    
+    // Getters and Setters
+    public String getName() {
+        return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public boolean isAgreeToTerms() {
+        return agreeToTerms;
+    }
+    
+    public void setAgreeToTerms(boolean agreeToTerms) {
+        this.agreeToTerms = agreeToTerms;
+    }
+}
