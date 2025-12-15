@@ -1,0 +1,11 @@
+{
+  "name": "web_scripts",
+  "private": true,
+  "version": "26.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -w -p tsconfig.json",
+    "clean": "rimraf ../app/src/main/resources/static/*.js ../app/src/main/resources/static/*.js.map"
+  }
+}
