@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Literia</title>
+    <link rel="stylesheet" href="http://localhost:3000/supplier/static?filename=style&type=css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script type="module" src="http://localhost:3000/supplier/static?filename=main&type=js" defer></script>
+</head>
+<body>
+
+<section th:fragment="sidebar" class="left-navbar">
+    <div class="logo-container">
+        <div class="brand" onclick="location.href='/'" style="cursor: pointer;">
+            <div class="brand-badge">Li</div>
+            <div class="brand-name">Literia</div>
+        </div>
+    </div>
+    <div class="search-box">
+        <input type="text" placeholder="Search..."/>
+    </div>
+    <nav class="nav-list">
+        <div class="functional-button" id="home-button" onclick="location.href='/home'">
+            <img src="http://localhost:3000/supplier/static?filename=home&type=png&asset=true" class="button-icon"
+                 alt="home">
+            <div class="button-text">Home</div>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <div class="functional-button" onclick="location.href='/auth/signup'">
+                <div class="icon-emoji" aria-hidden="true">📝</div>
+                <div class="button-text">Sign Up</div>
+            </div>
+            <div class="functional-button" onclick="location.href='/auth/login'">
+                <div class="icon-emoji" aria-hidden="true">🔑</div>
+                <div class="button-text">Login</div>
+            </div>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <div sec:authorize="hasAuthority('RESEARCHER')">
+                <div class="functional-button" onclick="location.href='/papers/submit'">
+                    <img src="http://localhost:3000/supplier/static?filename=upload&type=png&asset=true" class="button-icon" alt="upload">
+                    <div class="button-text">Submit Paper</div>
+                </div>
+                <div class="functional-button" onclick="location.href='/papers/my-papers'">
+                    <div class="icon-emoji" aria-hidden="true">📄</div>
+                    <div class="button-text">My Papers</div>
+                </div>
+            </div>
+            <div sec:authorize="hasAuthority('REVIEWER')">
+                <div class="functional-button" onclick="location.href='/reviews/assigned'">
+                    <div class="icon-emoji" aria-hidden="true">👁️</div>
+                    <div class="button-text">Assigned Reviews</div>
+                </div>
+            </div>
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <div class="functional-button" onclick="location.href='/admin/papers'">
+                    <div class="icon-emoji" aria-hidden="true">⚙️</div>
+                    <div class="button-text">Manage Papers</div>
+                </div>
+            </div>
+            <form th:action="@{/auth/logout}" method="post" id="logout-form" style="display: none;"></form>
+            <div class="functional-button" onclick="document.getElementById('logout-form').submit();">
+                <div class="icon-emoji" aria-hidden="true">🚪</div>
+                <div class="button-text">Logout</div>
+            </div>
+        </div>
+    </nav>
+    <div class="promo-card">
+        <div class="promo-header">
+            <span class="promo-icon">⚠️</span>
+            <button class="promo-dismiss" title="Dismiss">×</button>
+        </div>
+        <div class="promo-body">
+            Enjoy unlimited access to our app with only a small price monthly.
+        </div>
+        <div class="promo-actions">
+            <a href="#" class="link-muted">Dismiss</a>
+            <a href="#" class="link-primary">Go Pro</a>
+        </div>
+    </div>
+    <div class="profile functional-button" id="profile-button" onclick="location.href='/profile'">
+        <div class="avatar" sec:authorize="isAuthenticated()" th:text="${#authentication.name.substring(0,1).toUpperCase()}">U</div>
+        <div class="avatar" sec:authorize="!isAuthenticated()">?</div>
+        <div class="profile-meta">
+            <div class="name" sec:authorize="isAuthenticated()" sec:authentication="name">Username</div>
+            <div class="name" sec:authorize="!isAuthenticated()">Guest</div>
+            <div class="role" sec:authorize="isAuthenticated()" th:text="${#authentication.authorities}">Role</div>
+            <div class="role" sec:authorize="!isAuthenticated()">Visitor</div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

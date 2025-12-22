@@ -1,4 +1,5 @@
-import { page_mapping } from 'http://localhost:3000/supplier/static?filename=constants&type=js';
+// @ts-ignore
+import { page_mapping } from "http://localhost:3000/supplier/static?filename=constants&type=js";
 async function fetch_html_fragment(url) {
     let response = "";
     try {

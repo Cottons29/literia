@@ -1,1 +1,34 @@
-<h1>Home</h1>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Home - Literia')}"></head>
+<body>
+    <section th:replace="~{fragments/layout :: sidebar}"></section>
+    <section class="content">
+        <h1>Welcome, <span sec:authentication="name">User</span>!</h1>
+        
+        <div class="dashboard-grid">
+            <div sec:authorize="hasAuthority('RESEARCHER')" class="card">
+                <h2>Researcher Actions</h2>
+                <ul class="action-list">
+                    <li><a href="/papers/submit">Submit New Paper</a></li>
+                    <li><a href="/papers/my-papers">My Papers</a></li>
+                </ul>
+            </div>
+
+            <div sec:authorize="hasAuthority('REVIEWER')" class="card">
+                <h2>Reviewer Actions</h2>
+                <ul class="action-list">
+                    <li><a href="/reviews/assigned">Assigned Reviews</a></li>
+                </ul>
+            </div>
+
+            <div sec:authorize="hasAuthority('ADMIN')" class="card">
+                <h2>Admin Actions</h2>
+                <ul class="action-list">
+                    <li><a href="/admin/papers">Manage Paper Assignments</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

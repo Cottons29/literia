@@ -1,0 +1,63 @@
+package live.cottons.app.config;
+
+import live.cottons.app.services.UserService;
+import live.cottons.models.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.stream.Collectors;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    private final UserService userService;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/auth/**", "/css/**", "/js/**", "/supplier/static").permitAll()
+                .requestMatchers("/papers/submit").hasAuthority("RESEARCHER")
+                .requestMatchers("/reviews/**").hasAuthority("REVIEWER")
+                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                .anyRequest().authenticated()
+            )
+            .formLogin(login -> login
+                .loginPage("/auth/login")
+                .defaultSuccessUrl("/home", true)
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/auth/logout")
+                .logoutSuccessUrl("/")
+                .permitAll()
+            );
+
+        return http.build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return username -> {
+            User user = userService.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+            return new org.springframework.security.core.userdetails.User(
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getRoles().stream()
+                            .map(role -> new SimpleGrantedAuthority(role.name()))
+                            .collect(Collectors.toList())
+            );
+        };
+    }
+}
