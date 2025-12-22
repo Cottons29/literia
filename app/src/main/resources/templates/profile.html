@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Profile - Literia')}"></head>
+<body>
+    <section th:replace="~{fragments/layout :: sidebar}"></section>
+    <section class="content">
+        <h1>Profile Information</h1>
+        
+        <div class="dashboard-grid">
+            <div class="card">
+                <h2>General Information</h2>
+                <form class="profile-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" th:value="${#authentication.name}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <input type="text" id="role" th:value="${#authentication.authorities}" readonly>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>Security</h2>
+                <div class="password-section">
+                    <div class="form-group">
+                        <label for="old-password">Old Password</label>
+                        <input type="password" id="old-password" placeholder="Enter your old password">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" placeholder="Enter your new password">
+                    </div>
+                    <button class="btn-primary">Change Password</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

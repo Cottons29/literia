@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Sign Up - Literia')}"></head>
+<body>
+    <section th:replace="~{fragments/layout :: sidebar}"></section>
+    <section class="content">
+        <h1>Sign Up</h1>
+        <p class="subtitle">Create Your Account</p>
+        
+        <form th:action="@{/auth/signup}" method="post" class="form-container">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" name="email" placeholder="Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+                <select name="role" required class="form-select">
+                    <option value="RESEARCHER">Researcher</option>
+                    <option value="REVIEWER">Reviewer</option>
+                    <option value="ADMIN">Admin</option>
+                </select>
+            </div>
+
+            <div class="checkbox-group" style="margin-bottom: 20px;">
+                <input type="checkbox" id="terms" required>
+                <label for="terms" style="font-size: 14px; color: #57606a;">I agree to the Terms and Conditions</label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Sign Up</button>
+                <a href="/auth/login" class="btn-secondary">Already have an account? Login</a>
+            </div>
+        </form>
+    </section>
+</body>
+</html>

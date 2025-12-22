@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Admin - Manage Papers - Literia')}"></head>
+<body>
+    <section th:replace="~{fragments/layout :: sidebar}"></section>
+    <section class="content">
+        <h1>Manage Paper Assignments</h1>
+        <div class="card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="paper : ${papers}">
+                        <td th:text="${paper.title}">Title</td>
+                        <td th:text="${paper.author.username}">Author</td>
+                        <td>
+                            <span th:class="'badge badge-' + ${paper.status.name().toLowerCase()}" 
+                                  th:text="${paper.status}">Status</span>
+                        </td>
+                        <td>
+                            <div th:if="${paper.status.name() == 'SUBMITTED'}" class="action-form">
+                                <form th:action="@{/admin/assign}" method="post">
+                                    <input type="hidden" name="paperId" th:value="${paper.id}"/>
+                                    <select name="reviewerId" class="form-select">
+                                        <option th:each="reviewer : ${reviewers}" 
+                                                th:value="${reviewer.id}" 
+                                                th:text="${reviewer.username}">Reviewer</option>
+                                    </select>
+                                    <button type="submit" class="btn-primary btn-sm">Assign</button>
+                                </form>
+                            </div>
+                            <div th:if="${paper.status.name() == 'UNDER_REVIEW'}" class="action-buttons">
+                                <form th:action="@{/admin/decide}" method="post">
+                                    <input type="hidden" name="paperId" th:value="${paper.id}"/>
+                                    <button type="submit" name="status" value="ACCEPTED" class="btn-success btn-sm">Accept</button>
+                                    <button type="submit" name="status" value="REJECTED" class="btn-danger btn-sm">Reject</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+</html>
