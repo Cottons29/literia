@@ -49,6 +49,9 @@ application {
     mainClass = 'live.cottons.app.App'
 }
 
+springBoot {
+    mainClass.set("live.cottons.app.App")
+}
 
 
 //application {
