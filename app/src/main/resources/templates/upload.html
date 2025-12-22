@@ -1,28 +1,313 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head('Submit Paper - Literia')}"></head>
+
+<style>
+    .content {
+        padding: 2rem 3rem;
+        background: #f5f7fb;
+        min-height: 90vh;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: #1f2937;
+    }
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        max-width: 720px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        font-weight: 500;
+        margin-bottom: 0.4rem;
+        color: #374151;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding: 0.7rem 0.8rem;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        font-size: 0.95rem;
+        transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .file-upload-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100px;
+        border: 2px dashed #c7d2fe;
+        padding: 1.2rem;
+        border-radius: 10px;
+        background: linear-gradient(180deg,#fbfdff,#f8fafc);
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .file-upload-zone:hover {
+        box-shadow: 0 10px 30px rgba(99,102,241,0.08);
+    }
+
+    .file-upload-zone.drag-over {
+        border-color: #60a5fa;
+        background: linear-gradient(180deg,#ecfeff,#f0f9ff);
+        box-shadow: 0 18px 40px rgba(99,102,241,0.12);
+    }
+
+    .file-upload-inner {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: center;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .upload-text {
+        text-align: left;
+    }
+
+    .upload-text .title {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .upload-text .hint {
+        font-size: 0.88rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .file-input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-preview {
+        display: none;
+        margin-top: 0.9rem;
+        padding: 0.8rem;
+        border-radius: 8px;
+        background: #eef2ff;
+        border: 1px solid #c7d2fe;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .file-preview.show {
+        display: flex;
+    }
+
+    .file-preview .meta {
+        display:flex;
+        gap:0.75rem;
+        align-items:center;
+    }
+
+    .file-preview .meta .name {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .file-preview .meta .size {
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .remove-file {
+        background: transparent;
+        border: none;
+        color: #ef4444;
+        cursor: pointer;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+        .file-upload-inner { gap: 0.6rem; }
+        .upload-text .title { font-size: 0.95rem; }
+    }
+</style>
+
 <body>
-    <section th:replace="~{fragments/layout :: sidebar}"></section>
-    <section class="content">
-        <h1>Submit Research Paper</h1>
-        <form th:action="@{/papers/submit}" method="post" enctype="multipart/form-data" class="form-container">
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" name="title" required placeholder="Enter paper title">
+<section th:replace="~{fragments/layout :: sidebar}"></section>
+
+<section class="content">
+    <h1 class="page-title">Submit Research Paper</h1>
+
+    <form th:action="@{/papers/submit}"
+          method="post"
+          enctype="multipart/form-data"
+          class="form-card"
+          id="uploadForm">
+
+        <div class="form-group">
+            <label for="title">Paper Title</label>
+            <input id="title"
+                   type="text"
+                   name="title"
+                   required
+                   placeholder="Enter your paper title">
+        </div>
+
+        <div class="form-group">
+            <label for="abstract">Abstract</label>
+            <textarea id="abstract"
+                      name="paperAbstract"
+                      rows="5"
+                      required
+                      placeholder="Briefly describe your research..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Upload PDF</label>
+
+            <div class="file-upload-zone" id="dropZone" aria-label="File upload zone">
+                <div class="file-upload-inner">
+                    <div class="upload-text">
+                        <div class="title">Drag & drop your PDF here</div>
+                        <div class="hint">Or click to browse — only .pdf, max 25MB</div>
+                    </div>
+                </div>
+
+                <input id="fileInput" class="file-input" type="file" name="file" accept="application/pdf" aria-label="Upload PDF file" required>
             </div>
-            <div class="form-group">
-                <label>Abstract</label>
-                <textarea name="paperAbstract" required rows="5" placeholder="Enter abstract..."></textarea>
+
+            <div class="file-preview" id="filePreview" role="status" aria-live="polite">
+                <div class="meta">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+                        <path d="M14 2v6h6" />
+                    </svg>
+                    <div>
+                        <div class="name" id="fileName">Filename.pdf</div>
+                        <div class="size" id="fileSize">1.2 MB</div>
+                    </div>
+                </div>
+                <button type="button" class="remove-file" id="removeFile" title="Remove file">Remove</button>
             </div>
-            <div class="form-group">
-                <label>File (PDF)</label>
-                <input type="file" name="file" accept=".pdf" required>
-            </div>
-            <div class="form-actions">
-                <button type="submit" class="btn-primary">Submit Paper</button>
-                <a href="/home" class="btn-secondary">Cancel</a>
-            </div>
-        </form>
-    </section>
+
+        </div>
+
+        <div class="form-actions">
+            <a href="/home" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary" id="submitBtn" disabled>Submit Paper</button>
+        </div>
+
+    </form>
+</section>
+
+<script>
+    (function() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const fileNameEl = document.getElementById('fileName');
+        const fileSizeEl = document.getElementById('fileSize');
+        const removeBtn = document.getElementById('removeFile');
+        const submitBtn = document.getElementById('submitBtn');
+        const MAX_BYTES = 25 * 1024 * 1024; // 25MB
+
+        ['dragenter','dragover','dragleave','drop'].forEach(evt => {
+            document.addEventListener(evt, e => {
+                e.preventDefault(); e.stopPropagation();
+            });
+        });
+
+        // highlight zone when item is dragged over
+        ['dragenter','dragover'].forEach(evt => {
+            dropZone.addEventListener(evt, () => dropZone.classList.add('drag-over'));
+        });
+        ['dragleave','drop'].forEach(evt => {
+            dropZone.addEventListener(evt, () => dropZone.classList.remove('drag-over'));
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            if (!dt) return;
+            const files = dt.files;
+            if (files && files.length) {
+                fileInput.files = files;
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            if (files && files.length) handleFile(files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file) return clearFile();
+
+            if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                alert('Please upload a PDF file.');
+                return clearFile();
+            }
+            if (file.size > MAX_BYTES) {
+                alert('File is too large. Maximum allowed is 25MB.');
+                return clearFile();
+            }
+
+            fileNameEl.textContent = file.name;
+            fileSizeEl.textContent = formatBytes(file.size);
+            filePreview.classList.add('show');
+            submitBtn.disabled = false;
+        }
+
+        function clearFile() {
+            fileInput.value = '';
+            filePreview.classList.remove('show');
+            fileNameEl.textContent = '';
+            fileSizeEl.textContent = '';
+            submitBtn.disabled = true;
+        }
+
+        removeBtn.addEventListener('click', clearFile);
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes','KB','MB','GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        const form = document.getElementById('uploadForm');
+        form.addEventListener('submit', (e) => {
+            if (!fileInput.files || fileInput.files.length === 0) {
+                e.preventDefault();
+                alert('Please select a PDF file before submitting.');
+            }
+        });
+    })();
+</script>
 </body>
 </html>
