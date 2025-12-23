@@ -14,19 +14,6 @@ import java.util.Map;
 @Controller
 public class TestController {
 
-    @GetMapping("/index")
-    public Object test(
-            Model model,
-            @RequestParam(required = false, defaultValue = "html") String format,
-            @Param("name") String name
-    ) {
-        if ( format.equalsIgnoreCase("json")) {
-            return new ResponseEntity<>(Map.of("message", "Hello World! This is Json Data"), HttpStatus.OK);
-        }
-        new MessageUtils().setMessage(name).buildModel(model);
-        return "index";
-    }
-
     @GetMapping("/home")
     public Object home() {
         return "home";
@@ -46,8 +33,5 @@ public class TestController {
     public Object upload() {
         return "upload";
     }
-
-
-
 
 }
