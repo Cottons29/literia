@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Home - Literia')}"></head>
+<body>
+    <!-- Full-page hero section matching the Cover Lover style -->
+    <section class="hero-section">
+        <div class="container">
+            <!-- Header / Navigation -->
+            <header>
+                <div class="logo">
+                    <h1>Literia</h1>
+                    <span>Research Platform</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="/papers">Papers</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a sec:authorize="isAuthenticated()" href="/logout">Logout</a></li>
+                        <li sec:authorize="isAnonymous()"><a href="/login">Login</a></li>
+                    </ul>
+                </nav>
+            </header>
+
+            <!-- Main Hero Content -->
+            <section class="hero">
+                <div class="hero-text">
+                    <h2>Welcome back,<br><span sec:authentication="name">User</span>!</h2>
+                    <p>
+                        Manage your research papers, reviews, and contributions<br>
+                        all in one place. Explore the actions available to you below.
+                    </p>
+                    <button th:unless="${#authorization.expression('isAnonymous()')}" onclick="window.location.href='/papers'">Explore Papers</button>
+                    <button th:if="${#authorization.expression('isAnonymous()')}" onclick="window.location.href='/login'">Get Started</button>
+                </div>
+                <div class="hero-image">
+                    <img src="image.png" alt="PDF" />
+                </div>
+            </section>
+
+            <!-- Dashboard Cards (shown below hero on smaller screens) -->
+            <div class="dashboard-grid">
+                <div sec:authorize="hasAuthority('RESEARCHER')" class="card">
+                    <h3>Researcher Actions</h3>
+                    <ul class="action-list">
+                        <li><a href="/papers/submit">Submit New Paper</a></li>
+                        <li><a href="/papers/my-papers">My Papers</a></li>
+                    </ul>
+                </div>
+
+                <div sec:authorize="hasAuthority('REVIEWER')" class="card">
+                    <h3>Reviewer Actions</h3>
+                    <ul class="action-list">
+                        <li><a href="/reviews/assigned">Assigned Reviews</a></li>
+                    </ul>
+                </div>
+
+                <div sec:authorize="hasAuthority('ADMIN')" class="card">
+                    <h3>Admin Actions</h3>
+                    <ul class="action-list">
+                        <li><a href="/admin/papers">Manage Paper Assignments</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Icons (optional - you can remove if not needed) -->
+    <div class="social">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="X (Twitter)"><i class="fab fa-twitter"></i></a>
+    </div>
+
+    <!-- All styles at the bottom (matching the Cover Lover design) -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-color: #e9e7ff;
+            min-height: 100vh;
+        }
+        .hero-section {
+            background-color: #d7d1ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        .logo h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000;
+        }
+        .logo span {
+            font-size: 15px;
+            font-weight: 400;
+            display: block;
+            color: #333;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 40px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #5b5bd6;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -6px;
+            left: 0;
+            background-color: #5b5bd6;
+            transition: width 0.3s ease;
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex: 1;
+            margin-top: 20px;
+        }
+        .hero-text {
+            max-width: 550px;
+        }
+        .hero-text h2 {
+            font-size: 60px;
+            font-weight: 700;
+            color: #5b5bd6;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .hero-text p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .hero-text button {
+            background-color: #5b5bd6;
+            color: #fff;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(91, 91, 214, 0.3);
+            transition: all 0.3s ease;
+        }
+        .hero-text button:hover {
+            background-color: #4a4ac8;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(91, 91, 214, 0.4);
+        }
+        .hero-image {
+            max-width: 600px;
+            width: 100%;
+        }
+        .hero-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        /* Dashboard Grid - placed below hero */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+        }
+        .card h3 {
+            font-size: 22px;
+            color: #5b5bd6;
+            margin-bottom: 20px;
+        }
+        .action-list {
+            list-style: none;
+        }
+        .action-list li {
+            margin-bottom: 15px;
+        }
+        .action-list a {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 0;
+            display: block;
+            transition: color 0.3s;
+        }
+        .action-list a:hover {
+            color: #5b5bd6;
+        }
+        .social {
+            position: fixed;
+            right: 30px;
+            top: 35%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10;
+        }
+        .social a {
+            width: 40px;
+            height: 40px;
+            background-color: #5b5bd6;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .social a:hover {
+            background-color: #4a4ac8;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero-image {
+                margin-top: 50px;
+                max-width: 80%;
+            }
+            .social {
+                display: none;
+            }
+            .hero-text h2 {
+                font-size: 48px;
+            }
+            .dashboard-grid {
+                margin-top: 40px;
+            }
+        }
+        @media (max-width: 600px) {
+            .hero-text h2 {
+                font-size: 40px;
+            }
+            nav ul {
+                gap: 20px;
+            }
+            nav a {
+                font-size: 14px;
+            }
+        }
+    </style>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" 
+          integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+</body>
+</html>
