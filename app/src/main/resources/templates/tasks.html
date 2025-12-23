@@ -1,31 +1,55 @@
-<!DOCTYPE html>
+<!-- file: app/src/main/resources/templates/tasks.html -->
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head('My Papers - Literia')}"></head>
 <body>
-    <section th:replace="~{fragments/layout :: sidebar}"></section>
-    <section class="content">
-        <h1>My Submitted Papers</h1>
-        <div class="card">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Status</th>
-                        <th>Submitted At</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="paper : ${papers}">
-                        <td th:text="${paper.title}">Title</td>
-                        <td>
-                            <span th:class="'badge badge-' + ${paper.status.name().toLowerCase()}" 
+<section th:replace="~{fragments/layout :: sidebar}"></section>
+<section class="content">
+    <h1>My Submitted Papers</h1>
+    <div class="card">
+        <table class="data-table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Submitted At</th>
+                <th>Preview</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="paper : ${papers}">
+                <td th:text="${paper.title}">Title</td>
+                <td>
+                            <span th:class="'badge badge-' + ${paper.status.name().toLowerCase()}"
                                   th:text="${paper.status}">Status</span>
-                        </td>
-                        <td th:text="${#temporals.format(paper.submittedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+                </td>
+                <td th:text="${#temporals.format(paper.submittedAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+                <td>
+                    <a th:href="@{/papers/{id}/preview(id=${paper.id})}" target="_blank" class="btn btn-sm">
+                        Preview
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 </body>
+
+<style>
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 0.875rem;
+        border-radius: 3px;
+        background-color: #6f43de;
+        color: white;
+        text-decoration: none;
+    }
+
+    .btn-sm:hover {
+        background-color: #5a31b8;
+    }
+
+
+</style>
+
 </html>
